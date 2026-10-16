@@ -1,0 +1,11 @@
+{
+  "version": "unstable-2026-10-02",
+  "rev": "be1062e16a23255f48c52767d1c4caf263919bdd",
+  "hash": "sha256-ckMayyL96nkGLGq2CjxnUdWNJuvSGcowGd1/fL7FRSM=",
+  "vkrootsRev": "ee76e620798612c52fb8dcc32a1058a0a3538930",
+  "vkrootsHash": "sha256-E+8Uz3ViMMPZ1sLLz7YXbdDgDo9jCD+KR9x8TEpbECA=",
+  "overlayPaths": [
+    "vklayers/steam-overlay-wayland",
+    "lsteamclient/overlay_bridge"
+  ]
+}

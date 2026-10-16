@@ -1,0 +1,21 @@
+name: Update steam-wayland-overlay
+
+# Thin wrapper: all logic lives in .github/workflows/module-update.yml. The
+# updater opens a PR and cache-server's external build gates the merge, so this
+# repo's main only advances after a green build.
+on:
+  schedule:
+    # GitHub may delay or skip scheduled runs, and they only run on the default branch.
+    - cron: "35 5 * * *"
+  workflow_dispatch:
+permissions: {}
+
+jobs:
+  update:
+    uses: ./.github/workflows/module-update.yml
+    with:
+      module: steam-wayland-overlay
+      paths: modules/overlays/steam-wayland-overlay
+      command: nix-shell modules/overlays/steam-wayland-overlay/update.sh
+      version-file: modules/overlays/steam-wayland-overlay/source.json
+    secrets: inherit

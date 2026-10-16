@@ -1,0 +1,10 @@
+[[icedos.repositories]]
+url = "github:icedos/gaming"
+fetchDependencies = false
+modules = ["bbport"]
+
+[icedos.gaming.bbport]
+prerelease = true
+
+[icedos.system]
+version = "26.05"
