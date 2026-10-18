@@ -680,6 +680,9 @@
                   CLEAN_PRELOAD=0
                 fi
 
+                # me3 preloads its own overlay copy; a second one deadlocks the SLR entry point.
+                [ "''${COMMAND[0]##*/}" = "me3" ] && CLEAN_PRELOAD=1
+
                 if [ "$CLEAN_PRELOAD" = "1" ] && [ -n "$LD_PRELOAD" ]; then
                   NEW_PRELOAD=""
                   # ld.so accepts both spaces and colons as separators.
