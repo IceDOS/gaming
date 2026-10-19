@@ -1,14 +1,14 @@
 {
   "stable": {
-    "version": "0.51",
-    "rev": "0.51",
-    "url": "https://github.com/deadinside28/bloodborne_pc/releases/download/0.51/Bloodborne-bbport-x86_64.AppImage",
-    "hash": "sha256-Pbvsgorr1UJiLPJfDqEKFvULE/i1M4+2WWoaaaY1/M4="
+    "version": "0.6",
+    "rev": "0.6",
+    "url": "https://github.com/deadinside28/bloodborne_pc/releases/download/0.6/Bloodborne-bbport-x86_64.AppImage",
+    "hash": "sha256-oo+HVD0+bTFq0VhSUzO+CPnHw2LtGbV8XzVQxp0Fj2I="
   },
   "prerelease": {
-    "version": "0.6-pre1",
-    "rev": "0.6-pre1",
-    "url": "https://github.com/deadinside28/bloodborne_pc/releases/download/0.6-pre1/Bloodborne-bbport-x86_64.AppImage",
-    "hash": "sha256-IMiA5jgXj3okR4wuN2UO4uEN6TRMtgk4rqKa+mdqUQk="
+    "version": "0.6",
+    "rev": "0.6",
+    "url": "https://github.com/deadinside28/bloodborne_pc/releases/download/0.6/Bloodborne-bbport-x86_64.AppImage",
+    "hash": "sha256-oo+HVD0+bTFq0VhSUzO+CPnHw2LtGbV8XzVQxp0Fj2I="
   }
 }
