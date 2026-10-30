@@ -16,7 +16,8 @@ CORE="${ICEDOS_CORE:-$REPO_ROOT/.icedos-core}"
 
 PIN="$SCRIPT_DIR/source.json"
 REPO="deadinside28/bloodborne_pc"
-ASSET="Bloodborne-bbport-x86_64.AppImage"
+# Releases since 0.7 put the version in the name: Bloodborne-bbport-0.7-x86_64.AppImage.
+ASSET_RE='^Bloodborne-bbport-(.+-)?x86_64\.AppImage$'
 
 # Newest non-draft release of any kind, so the prerelease channel also moves to a
 # stable release that is newer than the last prerelease.
@@ -28,11 +29,13 @@ latest_any_release() {
 # SRI hash of the AppImage. Upstream's SHA256SUMS spares CI a ~400 MB download;
 # releases without it fall back to hashing the file.
 asset_hash() {
-  local tag="$1" url="$2" sums_url hex=""
+  local tag="$1" url="$2" asset sums_url hex=""
+
+  asset=$(basename "$url")
 
   sums_url=$(gh_release_asset_url "$REPO" "$tag" '^SHA256SUMS$')
   if [ -n "$sums_url" ]; then
-    hex=$(curl -sfL "$sums_url" | awk -v f="$ASSET" '$2 == f || $2 == "*" f { print $1 }')
+    hex=$(curl -sfL "$sums_url" | awk -v f="$asset" '$2 == f || $2 == "*" f { print $1 }')
   fi
 
   if [ -n "$hex" ]; then
@@ -57,8 +60,8 @@ update_channel() {
   info "  Current: ${current:-none}"
 
   local url
-  url=$(gh_release_asset_url "$REPO" "$tag" "^${ASSET}\$")
-  [ -n "$url" ] || error "release $tag has no asset named $ASSET"
+  url=$(gh_release_asset_url "$REPO" "$tag" "$ASSET_RE")
+  [ -n "$url" ] || error "release $tag has no asset matching $ASSET_RE"
 
   info "  Computing hash..."
   local hash

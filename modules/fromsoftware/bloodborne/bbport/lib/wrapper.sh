@@ -13,7 +13,7 @@ read -r mnt <&3 || exit 1
 # never backs them up and never gives its bell kit while still disabling the vanilla bells.
 export BBSC_SAVE_DIR="${BBSC_SAVE_DIR:-${BB_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bbport}/user/savedata/1/CUSA00207/SPRJ0005}"
 
-# The last source is the top layer: it replaces libbbnet.so with the BBSC memory fix.
+# The last source is the top layer: it replaces libbbnet*.so with the BBSC memory fix.
 @bwrap@ --dev-bind / / --die-with-parent \
   --overlay-src /nix/store --overlay-src "$mnt/nix/store" --overlay-src "$patched" --ro-overlay /nix/store \
   -- "$mnt/entrypoint" "$@" &

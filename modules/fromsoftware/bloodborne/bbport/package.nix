@@ -54,9 +54,11 @@ stdenv.mkDerivation {
     print(shoff + shentsize * shnum)
     ' $src)
     unsquashfs -q -o "$offset" -d image $src \
-      'nix/store/*-bbport-0.1/share/bbport/bin/gpu/libbbnet.so'
+      'nix/store/*-bbport-0.1/share/bbport/bin/gpu/libbbnet*.so'
     chmod -R u+w image
     gpu=$(echo image/nix/store/*-bbport-0.1/share/bbport/bin/gpu)
+    # 0.7 renamed libbbnet.so to libbbnet20.so.
+    net=$(echo $gpu/libbbnet*.so)
     # Each renamed import keeps its length, so the string tables are rewritten in place.
     # Releases whose BBSC lacks the checks leave the overlay empty.
     if python3 -I -c '
@@ -70,10 +72,10 @@ stdenv.mkDerivation {
             sys.exit(1)
         data = data.replace(old, new)
     open(sys.argv[1], "wb").write(data)
-    ' $gpu/libbbnet.so; then
+    ' $net; then
       $CC -O2 -shared -fPIC -o $gpu/libbbsc_vma.so ${./lib/bbsc-vma.c}
       # The renamed readv import still asks for GLIBC_2.15, which the shim does not define.
-      patchelf --clear-symbol-version bbsc_vm_readv_v1 --add-needed libbbsc_vma.so $gpu/libbbnet.so
+      patchelf --clear-symbol-version bbsc_vm_readv_v1 --add-needed libbbsc_vma.so $net
     else
       rm -r image/nix/store/*
     fi
