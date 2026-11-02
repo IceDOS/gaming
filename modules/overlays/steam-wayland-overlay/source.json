@@ -1,9 +1,9 @@
 {
-  "version": "unstable-2026-10-02",
-  "rev": "be1062e16a23255f48c52767d1c4caf263919bdd",
-  "hash": "sha256-ckMayyL96nkGLGq2CjxnUdWNJuvSGcowGd1/fL7FRSM=",
-  "vkrootsRev": "ee76e620798612c52fb8dcc32a1058a0a3538930",
-  "vkrootsHash": "sha256-E+8Uz3ViMMPZ1sLLz7YXbdDgDo9jCD+KR9x8TEpbECA=",
+  "version": "unstable-2026-11-02",
+  "rev": "167f19de053d90e4a2d3155941d7fb7f06194804",
+  "hash": "sha256-De7s0G6pk5bFoDi654HywHMSnW2vIRB9Cy28B2K1wBc=",
+  "vkrootsRev": "20733b938267dcac60f6ac105dbb757f9cc8df9c",
+  "vkrootsHash": "sha256-2al+yXK56aye4+p3dCV6Fd5rinGbYz92bwCaJB+Jsl0=",
   "overlayPaths": [
     "vklayers/steam-overlay-wayland",
     "lsteamclient/overlay_bridge"
