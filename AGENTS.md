@@ -30,7 +30,7 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
 - `overlays`: `mangohud`, `steam-wayland-overlay`.
 - `fromsoftware`: `me3`, `reigntweak`, `sekirofpsunlock` and `bloodborne/` (`bbhost`,
   `bbport`, `bbsc-gameserver`, `shadnet-p2p`).
-- `emulators`: `kytyps5`, `nx-optimizer`.
+- `emulators`: `kytyps5`, `nx-optimizer` and `nx2/` (`eglantine`, `lichii`, which share `mk-package.nix` and `update-common.sh`).
 - `tools`: `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`).
 
 ## Cross-repo checks
