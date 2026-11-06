@@ -38,7 +38,13 @@ main() {
   info "  Current: ${current:-none}"
 
   local version="${tag#build-}"
-  local url="https://github.com/$REPO/releases/download/$tag/$NAME-linux-x86_64-pgo.AppImage"
+  # Prefer the PGO AppImage; some builds ship only the plain one.
+  local url
+  url=$(gh_api "https://api.github.com/repos/$REPO/releases/tags/$tag" \
+    | jq -r --arg n "$NAME" '[.assets[] | select(.name == "\($n)-linux-x86_64-pgo.AppImage" or .name == "\($n)-linux-x86_64.AppImage")]
+             | sort_by(.name | test("-pgo") | not) | .[0].browser_download_url // ""')
+  [ -n "$url" ] || error "no x86_64 AppImage in $tag"
+  info "  Asset: ${url##*/}"
 
   info "  Hashing AppImage..."
   local hash
