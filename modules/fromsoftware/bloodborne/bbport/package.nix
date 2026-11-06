@@ -28,6 +28,10 @@ stdenv.mkDerivation {
   pname = "bbport";
   inherit (source) version;
 
+  icedosNoCache = true;
+  preferLocalBuild = true;
+  allowSubstitutes = false;
+
   src = fetchurl {
     inherit (source) url hash;
   };

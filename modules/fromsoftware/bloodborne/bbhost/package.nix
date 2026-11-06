@@ -80,6 +80,10 @@ stdenv.mkDerivation {
   pname = "bbhost";
   inherit (source) version;
 
+  icedosNoCache = true;
+  preferLocalBuild = true;
+  allowSubstitutes = false;
+
   src = fetchurl {
     inherit (source) url hash;
   };

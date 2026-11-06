@@ -49,6 +49,10 @@ in
 stdenvNoCC.mkDerivation {
   inherit pname version;
 
+  icedosNoCache = true;
+  preferLocalBuild = true;
+  allowSubstitutes = false;
+
   dontUnpack = true;
 
   nativeBuildInputs = [ makeWrapper ];
