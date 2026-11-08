@@ -31,6 +31,7 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
 - `fromsoftware`: `me3`, `playdb-cnt` (The Duskbloods Network Test launcher), `reigntweak`,
   `sekirofpsunlock` and `bloodborne/` (`bbhost`, `bbport`, `bbsc-gameserver`, `shadnet-p2p`).
 - `emulators`: `kytyps5`, `nx-optimizer` and `nx2/` (`eglantine`, `lichii`, which share `mk-package.nix` and `update-common.sh`).
+  `lichii` can also build from source (`build = "source"`) at a pinned rev with `source.patches` applied (`source-package.nix`).
 - `tools`: `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`).
 
 ## Cross-repo checks

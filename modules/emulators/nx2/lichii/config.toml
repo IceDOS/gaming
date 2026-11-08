@@ -1,0 +1,22 @@
+[icedos.gaming.lichii]
+# "appimage" installs the prebuilt release pinned in source.json.
+# "source" builds icedos.gaming.lichii.source on this PC, with any pull requests applied.
+build = "appimage"
+
+[icedos.gaming.lichii.source]
+# Commit SHA or tag (e.g. "build-117") of github.com/zortos293/Lichii.
+rev = ""
+# Hash of that source. Leave empty and the build fails printing the right one.
+hash = ""
+# Version label. Empty uses the tag, or "nx2-" plus the first 10 characters of a commit.
+version = ""
+# Build with clang and upstream's eglantine.profdata, like the -pgo AppImage.
+pgo = true
+
+# Applied on top of rev in order with fetchpatch. Leave `hash` empty to get it printed.
+# pull/<n>.diff changes on every push to the PR; compare/<rev>...<pr head>.diff stays fixed.
+# excludes drops files from a patch, for a hunk that conflicts with a newer rev.
+# patches = [
+#   { url = "https://github.com/zortos293/Lichii/pull/552.diff", hash = "" },
+# ]
+patches = []
