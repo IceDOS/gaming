@@ -1,0 +1,20 @@
+name: Update Savage Wind
+
+# Thin wrapper: all logic lives in .github/workflows/module-update.yml. The
+# updater opens a PR and cache-server's external build gates the merge.
+on:
+  schedule:
+    # GitHub may delay or skip scheduled runs, and they only run on the default branch.
+    - cron: "25 5 * * *"
+  workflow_dispatch:
+permissions: {}
+
+jobs:
+  update:
+    uses: ./.github/workflows/module-update.yml
+    with:
+      module: savagewind
+      paths: modules/emulators/nx/savagewind
+      command: nix-shell modules/emulators/nx/savagewind/update.sh
+      version-file: modules/emulators/nx/savagewind/source.json
+    secrets: inherit
