@@ -1,0 +1,20 @@
+name: Update Hookshot
+
+# Thin wrapper: all logic lives in .github/workflows/module-update.yml. The
+# updater opens a PR and cache-server's external build gates the merge.
+on:
+  schedule:
+    # GitHub may delay or skip scheduled runs, and they only run on the default branch.
+    - cron: "55 4 * * *"
+  workflow_dispatch:
+permissions: {}
+
+jobs:
+  update:
+    uses: ./.github/workflows/module-update.yml
+    with:
+      module: hookshot
+      paths: modules/emulators/nx2/hookshot
+      command: nix-shell modules/emulators/nx2/hookshot/update.sh
+      version-file: modules/emulators/nx2/hookshot/source.json
+    secrets: inherit

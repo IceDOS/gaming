@@ -32,6 +32,7 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
   `sekirofpsunlock` and `bloodborne/` (`bbhost`, `bbport`, `bbsc-gameserver`, `shadnet-p2p`).
 - `emulators`: `kytyps5`, `nx-optimizer` and `nx2/` (`eglantine`, `lichii`, which share `mk-package.nix` and `update-common.sh`).
   `lichii` can also build from source (`build = "source"`) at a pinned rev with `source.patches` applied (`source-package.nix`).
+  `hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
 - `tools`: `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`).
 
 ## Cross-repo checks
