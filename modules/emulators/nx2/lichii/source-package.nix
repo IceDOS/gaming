@@ -78,6 +78,13 @@ let
     hash = "sha256-pHvxa1gkUvQo6mUgmLWtj1kcu01BLdGmttZyb8ZAj/o=";
   };
 
+  xxhashSrc = fetchFromGitHub {
+    owner = "Cyan4973";
+    repo = "xxHash";
+    rev = "v0.8.3";
+    hash = "sha256-h6kohM+NxvQ89R9NEXZcYBG2wPOuB4mcyPfofKrx9wQ=";
+  };
+
   reshadeSrc = fetchFromGitHub {
     owner = "crosire";
     repo = "reshade";
@@ -211,6 +218,8 @@ stdenv'.mkDerivation (finalAttrs: {
     (lib.cmakeFeature "zstd_CUSTOM_DIR" "${zstdSrc}")
     (lib.cmakeBool "zbic_FORCE_BUNDLED" true)
     (lib.cmakeFeature "zbic_CUSTOM_DIR" "${zbic}")
+    (lib.cmakeBool "xxhash_FORCE_BUNDLED" true)
+    (lib.cmakeFeature "xxhash_CUSTOM_DIR" "${xxhashSrc}")
     (lib.cmakeBool "reshade_FORCE_BUNDLED" true)
     (lib.cmakeFeature "reshade_CUSTOM_DIR" "${finalAttrs.reshade}")
 
