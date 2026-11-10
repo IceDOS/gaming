@@ -4,6 +4,6 @@
 # shellcheck disable=SC2034
 NAME="eglantine"
 # shellcheck disable=SC2034
-REPO="Djihads80/Eglantine"
+REPO="Eglantine-Community/Eglantine"
 # shellcheck source=/dev/null
 . "$(dirname "$0")/../update-common.sh"

@@ -9,5 +9,5 @@ callPackage ../mk-package.nix {
   desktopName = "Eglantine";
   comment = "Experimental Nintendo Switch 2 emulator";
   iconSize = "512x512";
-  homepage = "https://github.com/Djihads80/Eglantine";
+  homepage = "https://github.com/Eglantine-Community/Eglantine";
 }
