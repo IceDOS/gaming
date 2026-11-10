@@ -1,0 +1,16 @@
+name: Update TotK Recomp
+
+# Manual on purpose: CI cannot detect runtime crashes and upstream releases about daily.
+on:
+  workflow_dispatch:
+permissions: {}
+
+jobs:
+  update:
+    uses: ./.github/workflows/module-update.yml
+    with:
+      module: totk-recomp
+      paths: modules/tools/nintendo/nx/totk/totk-recomp
+      command: nix-shell modules/tools/nintendo/nx/totk/totk-recomp/update.sh
+      version-file: modules/tools/nintendo/nx/totk/totk-recomp/source.json
+    secrets: inherit

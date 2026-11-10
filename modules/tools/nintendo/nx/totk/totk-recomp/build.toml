@@ -1,7 +1,7 @@
 [[icedos.repositories]]
 url = "github:icedos/gaming"
 fetchDependencies = false
-modules = ["nx-optimizer"]
+modules = ["totk-recomp"]
 
 [icedos.system]
 version = "26.05"
