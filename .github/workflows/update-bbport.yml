@@ -15,9 +15,9 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: bbport
-      paths: modules/fromsoftware/bloodborne/bbport
-      command: nix-shell modules/fromsoftware/bloodborne/bbport/update.sh
-      version-file: modules/fromsoftware/bloodborne/bbport/source.json
+      paths: modules/tools/fromsoftware/bb/bbport
+      command: nix-shell modules/tools/fromsoftware/bb/bbport/update.sh
+      version-file: modules/tools/fromsoftware/bb/bbport/source.json
       # One PR covers both channels, so the title shows both pins.
       version-jq: '"\(.stable.version) / \(.prerelease.version)"'
     secrets: inherit

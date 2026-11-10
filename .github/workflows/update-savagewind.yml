@@ -14,7 +14,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: savagewind
-      paths: modules/emulators/nx/savagewind
-      command: nix-shell modules/emulators/nx/savagewind/update.sh
-      version-file: modules/emulators/nx/savagewind/source.json
+      paths: modules/tools/nintendo/nx/botw/savagewind
+      command: nix-shell modules/tools/nintendo/nx/botw/savagewind/update.sh
+      version-file: modules/tools/nintendo/nx/botw/savagewind/source.json
     secrets: inherit

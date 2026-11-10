@@ -25,16 +25,18 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
 `icedosLib.scanModules { path = ./modules; filename = "icedos.nix"; }`, which recurses, and
 `meta.name` (not the folder) names the module. The categories are:
 - `launchers`: `aagl` (anime game launchers).
-- `performance`: `gamemode`, `gamescope`, `lsfg-vk`, `low-latency-vulkan-layer`, and
+- `performance`: `gamemode`, `lsfg-vk`, `low-latency-vulkan-layer`, and
   `tweaks` (gaming sysctls, memlock limits and controller udev rules).
 - `overlays`: `mangohud`, `steam-wayland-overlay`.
-- `fromsoftware`: `me3`, `playdb-cnt` (The Duskbloods Network Test launcher), `reigntweak`,
-  `sekirofpsunlock` and `bloodborne/` (`bbhost`, `bbport`, `bbsc-gameserver`, `shadnet-p2p`).
-- `emulators`: `kytyps5`, `nx-optimizer` and `nx2/` (`eglantine`, `lichii`, which share `mk-package.nix` and `update-common.sh`).
+- `emulators`: `playstation/kytyps5` and `nintendo/nx2/` (`eglantine`, `lichii`, which share `mk-package.nix` and `update-common.sh`).
   `lichii` can also build from source (`build = "source"`) at a pinned rev with `source.patches` applied (`source-package.nix`).
-  `hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
-  `nx/savagewind` is the Breath of the Wild static recompilation. It has its own FHS wrapper around the upstream AppImage, and upstream publishes only prereleases, so its updater reads the release list.
-- `tools`: `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`).
+- `servers`: `fromsoftware/bb/` (`bbsc-gameserver`, `shadnet-p2p`).
+- `tools`: `gamescope`, `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`),
+  `fromsoftware/` (`bb/bbport`, `duskbloods/playdb-cnt` (The Duskbloods Network Test launcher), `me3`,
+  `nightreign/reigntweak`, `sekiro/sekirofpsunlock`) and `nintendo/` (`nx/botw/savagewind`, `nx/totk/totk-recomp`, `nx2/hookshot`).
+  `nintendo/nx2/hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
+  `nintendo/nx/totk/totk-recomp` is the Tears of the Kingdom static recompilation. It has its own FHS wrapper around the upstream AppImage, adds `libdecor` for the built game, and adds `--play` because upstream has no launcher. The game and its files stay outside the store, in the folder picked during setup.
+  `nintendo/nx/botw/savagewind` is the Breath of the Wild static recompilation. It has its own FHS wrapper around the upstream AppImage, and upstream publishes only prereleases, so its updater reads the release list.
 
 ## Cross-repo checks
 `steamdeck` and `monitors` stay in `hardware`, so `hasModule` calls for them pass

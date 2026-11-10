@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: shadnet-p2p
-      paths: modules/fromsoftware/bloodborne/shadnet-p2p
-      command: nix-shell modules/fromsoftware/bloodborne/shadnet-p2p/update.sh
-      version-file: modules/fromsoftware/bloodborne/shadnet-p2p/source.json
+      paths: modules/servers/fromsoftware/bb/shadnet-p2p
+      command: nix-shell modules/servers/fromsoftware/bb/shadnet-p2p/update.sh
+      version-file: modules/servers/fromsoftware/bb/shadnet-p2p/source.json
     secrets: inherit

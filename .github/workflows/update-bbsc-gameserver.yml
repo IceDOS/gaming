@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: bbsc-gameserver
-      paths: modules/fromsoftware/bloodborne/bbsc-gameserver
-      command: nix-shell modules/fromsoftware/bloodborne/bbsc-gameserver/update.sh
-      version-file: modules/fromsoftware/bloodborne/bbsc-gameserver/source.json
+      paths: modules/servers/fromsoftware/bb/bbsc-gameserver
+      command: nix-shell modules/servers/fromsoftware/bb/bbsc-gameserver/update.sh
+      version-file: modules/servers/fromsoftware/bb/bbsc-gameserver/source.json
     secrets: inherit

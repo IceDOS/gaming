@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: lichii
-      paths: modules/emulators/nx2/lichii
-      command: nix-shell modules/emulators/nx2/lichii/update.sh
-      version-file: modules/emulators/nx2/lichii/source.json
+      paths: modules/emulators/nintendo/nx2/lichii
+      command: nix-shell modules/emulators/nintendo/nx2/lichii/update.sh
+      version-file: modules/emulators/nintendo/nx2/lichii/source.json
     secrets: inherit

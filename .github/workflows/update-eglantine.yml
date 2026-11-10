@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: eglantine
-      paths: modules/emulators/nx2/eglantine
-      command: nix-shell modules/emulators/nx2/eglantine/update.sh
-      version-file: modules/emulators/nx2/eglantine/source.json
+      paths: modules/emulators/nintendo/nx2/eglantine
+      command: nix-shell modules/emulators/nintendo/nx2/eglantine/update.sh
+      version-file: modules/emulators/nintendo/nx2/eglantine/source.json
     secrets: inherit
