@@ -37,11 +37,15 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
   `nintendo/nx2/hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
   `nintendo/nx/totk/totk-recomp` is the Tears of the Kingdom static recompilation. It has its own FHS wrapper around the upstream AppImage, adds `libdecor` for the built game, and adds `--play` because upstream has no launcher. The game and its files stay outside the store, in the folder picked during setup.
   `nintendo/nx/botw/savagewind` is the Breath of the Wild static recompilation. It has its own FHS wrapper around the upstream AppImage, and upstream publishes only prereleases, so its updater reads the release list.
+  `gamescope/sunshine-headless` is `sunshine-headless-gamescope`, the gamescope backend for `apps#sunshine-headless`.
+  Its options live in `icedos.gaming.gamescope.sunshine-headless`, and it registers itself in
+  `icedos.applications.sunshine-headless.compositors.gamescope`.
 
 ## Cross-repo checks
 `steamdeck` and `monitors` stay in `hardware`, so `hasModule` calls for them pass
 `url = "github:icedos/hardware"`. `apps#steam` checks for `proton-launch`, `me3` and
-`reigntweak` with `url = "github:icedos/gaming"`.
+`reigntweak` with `url = "github:icedos/gaming"`. `sunshine-headless-gamescope` depends on
+`apps#sunshine-headless`, and `apps#steam-headless` depends on it with `url = "github:icedos/gaming"`.
 
 ## Test a change to this repo
 Point this repo's `overrideUrl` at the local checkout in the config root
