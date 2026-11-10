@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: playdb-cnt
-      paths: modules/tools/fromsoftware/duskbloods/playdb-cnt
-      command: nix-shell modules/tools/fromsoftware/duskbloods/playdb-cnt/update.sh
-      version-file: modules/tools/fromsoftware/duskbloods/playdb-cnt/source.json
+      paths: modules/tools/nintendo/nx2/duskbloods/playdb-cnt
+      command: nix-shell modules/tools/nintendo/nx2/duskbloods/playdb-cnt/update.sh
+      version-file: modules/tools/nintendo/nx2/duskbloods/playdb-cnt/source.json
     secrets: inherit

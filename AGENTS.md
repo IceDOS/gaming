@@ -32,9 +32,9 @@ Every option here lives under `icedos.gaming.<module>` (`icedos.gaming.proton-la
   `lichii` can also build from source (`build = "source"`) at a pinned rev with `source.patches` applied (`source-package.nix`).
 - `servers`: `fromsoftware/bb/` (`bbsc-gameserver`, `shadnet-p2p`).
 - `tools`: `gamescope`, `prefixer`, `proton-launch`, `steam-cloud-file-manager`, `unshade` (prunes shader caches during `icedos gc`),
-  `fromsoftware/` (`bb/bbport`, `duskbloods/playdb-cnt` (The Duskbloods Network Test launcher), `me3`,
-  `nightreign/reigntweak`, `sekiro/sekirofpsunlock`) and `nintendo/` (`nx/botw/savagewind`, `nx/totk/totk-recomp`, `nx2/hookshot`).
-  `nintendo/nx2/hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
+  `fromsoftware/` (`bb/bbport`, `me3`,
+  `nightreign/reigntweak`, `sekiro/sekirofpsunlock`) and `nintendo/` (`nx/botw/savagewind`, `nx/totk/totk-recomp`, `nx2/duskbloods/playdb-cnt` (The Duskbloods Network Test launcher), `nx2/oot/hookshot`).
+  `nintendo/nx2/oot/hookshot` is the Ocarina of Time static recompilation. It has its own FHS wrapper around the upstream AppImage, not `mk-package.nix`, and its environment keeps the builder's self-updater off.
   `nintendo/nx/totk/totk-recomp` is the Tears of the Kingdom static recompilation. It has its own FHS wrapper around the upstream AppImage, adds `libdecor` for the built game, and adds `--play` because upstream has no launcher. The game and its files stay outside the store, in the folder picked during setup.
   `nintendo/nx/botw/savagewind` is the Breath of the Wild static recompilation. It has its own FHS wrapper around the upstream AppImage, and upstream publishes only prereleases, so its updater reads the release list.
   `gamescope/sunshine-headless` is `sunshine-headless-gamescope`, the gamescope backend for `apps#sunshine-headless`.

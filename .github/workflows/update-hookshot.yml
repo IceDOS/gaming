@@ -14,7 +14,7 @@ jobs:
     uses: ./.github/workflows/module-update.yml
     with:
       module: hookshot
-      paths: modules/tools/nintendo/nx2/hookshot
-      command: nix-shell modules/tools/nintendo/nx2/hookshot/update.sh
-      version-file: modules/tools/nintendo/nx2/hookshot/source.json
+      paths: modules/tools/nintendo/nx2/oot/hookshot
+      command: nix-shell modules/tools/nintendo/nx2/oot/hookshot/update.sh
+      version-file: modules/tools/nintendo/nx2/oot/hookshot/source.json
     secrets: inherit
