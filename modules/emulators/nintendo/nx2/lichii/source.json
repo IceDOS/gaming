@@ -1,6 +1,6 @@
 {
-  "version": "150",
-  "rev": "build-150",
-  "url": "https://github.com/zortos293/Lichii/releases/download/build-150/lichii-linux-x86_64-pgo.AppImage",
-  "hash": "sha256-KHxxsa4g/8ORQQ7O8xvlUNe40lyt4zZehqzP+Btu3z8="
+  "version": "160",
+  "rev": "build-160",
+  "url": "https://github.com/zortos293/Lichii/releases/download/build-160/lichii-linux-x86_64-pgo.AppImage",
+  "hash": "sha256-zBoJ5Gw+Bg6vEJE0BAoUSK4I/b1RtYZuE+qfQrDZEzI="
 }
