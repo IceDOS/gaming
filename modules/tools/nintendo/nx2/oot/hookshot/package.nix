@@ -19,15 +19,6 @@ let
     (appimageTools.extract {
       inherit pname version;
       src = fetchurl { inherit (source) url hash; };
-
-      # copy2 keeps the store's read-only mode, which breaks overwriting copied assets on rebuilds.
-      postExtract = ''
-        substituteInPlace $out/usr/share/hookshot/nx2/make_game.py \
-          --replace-fail 'shutil.copy2(icon, os.path.join(out, "hookshot.png"))' \
-          'shutil.copyfile(icon, os.path.join(out, "hookshot.png"))' \
-          --replace-fail 'shutil.copy2(src, os.path.join(work, "image", "chunks.txt"))' \
-          'dst = os.path.join(work, "image", "chunks.txt"); os.remove(dst) if os.path.exists(dst) else None; shutil.copyfile(src, dst)'
-      '';
     }).overrideAttrs
       (_: {
         icedosNoCache = true;
