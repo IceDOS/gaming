@@ -5,3 +5,10 @@ logSizeLimit = 16
 # Default Vulkan present mode; "" leaves it to the driver. --present-mode overrides.
 # Options: fifo (strict vsync), relaxed, mailbox (tear-free, low latency), immediate (lowest latency, tears)
 presentMode = ""
+
+[icedos.gaming.proton-launch.hooks]
+# Shell snippets run before the game starts.
+preLaunch = []
+
+# Shell snippets run after the game exits. runOn: always, success, or failure.
+postLaunch = []

@@ -9,9 +9,45 @@
   options.icedos.gaming.proton-launch =
     let
       inherit (lib) importTOML;
-      inherit ((importTOML ./config.toml).icedos.gaming.proton-launch) logSizeLimit presentMode;
+      inherit ((importTOML ./config.toml).icedos.gaming.proton-launch)
+        hooks
+        logSizeLimit
+        presentMode
+        ;
     in
     {
+      hooks = {
+        preLaunch = icedosLib.mkLinesListOption {
+          default = hooks.preLaunch;
+          description = "Shell snippets run immediately before the game launches.";
+        };
+
+        postLaunch =
+          icedosLib.mkSubmoduleListOption
+            {
+              default = hooks.postLaunch;
+              description = "Shell snippets run after the game exits.";
+            }
+            {
+              script = icedosLib.mkLinesOption {
+                description = "Shell snippet to run.";
+              };
+              runOn =
+                icedosLib.mkEnumOption
+                  {
+                    path = "icedos.gaming.proton-launch.hooks.postLaunch.runOn";
+                    source = ./config.toml;
+                    default = "always";
+                    description = "Condition to run hook: always, success, or failure.";
+                  }
+                  [
+                    "always"
+                    "success"
+                    "failure"
+                  ];
+            };
+      };
+
       logSizeLimit = icedosLib.mkIntBetweenOption {
         path = "icedos.gaming.proton-launch.logSizeLimit";
         source = ./config.toml;
@@ -50,7 +86,9 @@
           inherit (lib)
             any
             attrNames
+            concatStringsSep
             head
+            imap0
             last
             length
             optional
@@ -79,8 +117,17 @@
             name = "steam-wayland-overlay";
           };
 
-          inherit (config.icedos.gaming.proton-launch) logSizeLimit presentMode;
+          inherit (config.icedos.gaming.proton-launch) hooks logSizeLimit presentMode;
           logSizeLimitBytes = toString (logSizeLimit * 1024 * 1024);
+
+          preHooks = imap0 (
+            i: s: pkgs.writeShellScript "proton-launch-hook-pre-${toString i}" s
+          ) hooks.preLaunch;
+          postHooks = imap0 (i: h: {
+            inherit (h) runOn;
+            index = toString i;
+            script = pkgs.writeShellScript "proton-launch-hook-post-${toString i}" h.script;
+          }) hooks.postLaunch;
 
           # 16G when the hardware repo, or a pinned revision of it, lacks the option.
           shaderCacheMaxSize = config.icedos.hardware.graphics.mesa.shaderCacheMaxSize or "16G";
@@ -817,18 +864,66 @@
                   }
                 fi
 
-                ${
-                  if hasKde then
-                    ''
-                      BALOOCTL="$(command -v balooctl6 2>/dev/null || command -v balooctl 2>/dev/null)"
-                      if [ "$BALOO_SUSPEND" = "1" ] && [ -n "$BALOOCTL" ]; then
-                        "$BALOOCTL" suspend 2>/dev/null
-                        trap '"$BALOOCTL" resume 2>/dev/null' EXIT INT TERM
-                      fi
-                    ''
-                  else
-                    ""
+                ${optionalString hasKde ''
+                  BALOOCTL="$(command -v balooctl6 2>/dev/null || command -v balooctl 2>/dev/null)"
+                  if [ "$BALOO_SUSPEND" = "1" ] && [ -n "$BALOOCTL" ]; then
+                    "$BALOOCTL" suspend 2>/dev/null
+                  fi
+                ''}
+
+                POST_HOOKS_RUN=0
+                GAME_PID=""
+                run_post_hooks() {
+                  local code="''${1:-''${GAME_EXIT_CODE:-1}}"
+                  [ "$POST_HOOKS_RUN" = "1" ] && return 0
+                  POST_HOOKS_RUN=1
+
+                  if [ -n "$GAME_PID" ] && kill -0 "$GAME_PID" 2>/dev/null; then
+                    kill -TERM "$GAME_PID" 2>/dev/null
+                  fi
+
+                  ${optionalString hasKde ''
+                    if [ "$BALOO_SUSPEND" = "1" ] && [ -n "$BALOOCTL" ]; then
+                      "$BALOOCTL" resume 2>/dev/null
+                    fi
+                  ''}
+
+                  export PROTON_LAUNCH_PHASE=post
+                  export PROTON_LAUNCH_EXIT_CODE="$code"
+
+                  ${concatStringsSep "\n" (
+                    map (h: ''
+                      case "${h.runOn}" in
+                        always)
+                          ${h.script} || {
+                            hook_status=$?
+                            echo "proton-launch: postLaunch hook ${h.index} failed ($hook_status)" >&2
+                          }
+                          ;;
+                        success)
+                          if [ "$code" -eq 0 ]; then
+                            ${h.script} || {
+                              hook_status=$?
+                              echo "proton-launch: postLaunch hook ${h.index} failed ($hook_status)" >&2
+                            }
+                          fi
+                          ;;
+                        failure)
+                          if [ "$code" -ne 0 ]; then
+                            ${h.script} || {
+                              hook_status=$?
+                              echo "proton-launch: postLaunch hook ${h.index} failed ($hook_status)" >&2
+                            }
+                          fi
+                          ;;
+                      esac
+                    '') postHooks
+                  )}
                 }
+
+                trap 'run_post_hooks 143; exit 143' TERM
+                trap 'run_post_hooks 130; exit 130' INT
+                trap 'run_post_hooks' EXIT
 
                 # Outside a user session (a systemd scope or service) polkit refuses both
                 # holds, and systemd-inhibit then exits without ever exec'ing the game.
@@ -841,7 +936,23 @@
                   GAME_PERFORMANCE=""
                 fi
 
-                $GAME_INHIBIT $GAME_PERFORMANCE $MANGOHUD $GAMEMODE $GAMESCOPE "''${COMMAND[@]}"
+                export PROTON_LAUNCH_COMMAND="''${COMMAND[*]}"
+                export PROTON_LAUNCH_PHASE=pre
+
+                ${concatStringsSep "\n" (
+                  imap0 (i: script: ''
+                    ${script} || {
+                      hook_status=$?
+                      echo "proton-launch: preLaunch hook ${toString i} failed ($hook_status)" >&2
+                    }
+                  '') preHooks
+                )}
+
+                $GAME_INHIBIT $GAME_PERFORMANCE $MANGOHUD $GAMEMODE $GAMESCOPE "''${COMMAND[@]}" &
+                GAME_PID=$!
+                wait "$GAME_PID"
+                GAME_EXIT_CODE=$?
+                exit "$GAME_EXIT_CODE"
               '';
             }
           );

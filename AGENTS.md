@@ -58,7 +58,7 @@ Modules that package something not in nixpkgs keep the pin in `source.json` next
 
 ## Notable modules / gotchas
 - `me3`: game mod loader (per-game profiles/natives/packages).
-- `prefixer`, `proton-launch`: Proton prefix tooling (protontricks is deprecated here;
-  use `prefixer <APP_ID> run <exe>`).
+- `prefixer`, `proton-launch`: Proton prefix tooling and launcher (supports pre/post launch hooks;
+  protontricks is deprecated here; use `prefixer <APP_ID> run <exe>`).
 - `tweaks`: no options. It only sets kernel params, sysctls and limits, so be conservative
   and validate with `--build`.
