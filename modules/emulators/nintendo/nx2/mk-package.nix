@@ -25,14 +25,16 @@ let
 
   desktopFile = "${appId}.desktop";
 
-  contents = (appimageTools.extract {
-    inherit pname version;
-    src = fetchurl { inherit (source) url hash; };
-  }).overrideAttrs (_: {
-    icedosNoCache = true;
-    preferLocalBuild = true;
-    allowSubstitutes = false;
-  });
+  contents =
+    (appimageTools.extract {
+      inherit pname version;
+      src = fetchurl { inherit (source) url hash; };
+    }).overrideAttrs
+      (_: {
+        icedosNoCache = true;
+        preferLocalBuild = true;
+        allowSubstitutes = false;
+      });
 
   # Generic env instead of wrapType2, which only runs AppRun and so cannot start eden-cli.
   fhs = buildFHSEnv (

@@ -85,6 +85,14 @@ let
     hash = "sha256-h6kohM+NxvQ89R9NEXZcYBG2wPOuB4mcyPfofKrx9wQ=";
   };
 
+  # nextendo.cpp (#1344) needs the httplib::Params of the pinned 0.46, nixpkgs has a newer API.
+  httplibSrc = fetchFromGitHub {
+    owner = "yhirose";
+    repo = "cpp-httplib";
+    rev = "v0.46.0";
+    hash = "sha256-Vzr51oo344jFNwmqdtLWxClJpuCTzmnMqXyLCz8UZj4=";
+  };
+
   reshadeSrc = fetchFromGitHub {
     owner = "crosire";
     repo = "reshade";
@@ -210,16 +218,28 @@ stdenv'.mkDerivation (finalAttrs: {
     (lib.cmakeBool "YUZU_DISABLE_LLVM" true)
     (lib.cmakeBool "YUZU_USE_QT_WEB_ENGINE" true)
     (lib.cmakeBool "YUZU_USE_QT_MULTIMEDIA" true)
+    # Upstream #1541 renamed YUZU_* flags to LICHII_* for nx2.
+    (lib.cmakeBool "LICHII_TESTS" false)
+    (lib.cmakeBool "LICHII_CMD" true)
+    (lib.cmakeBool "LICHII_ROOM" false)
+    (lib.cmakeBool "LICHII_ROOM_STANDALONE" false)
+    (lib.cmakeBool "LICHII_ENABLE_COMPATIBILITY_REPORTING" false)
+    (lib.cmakeBool "LICHII_DISABLE_LLVM" true)
+    (lib.cmakeBool "LICHII_USE_QT_WEB_ENGINE" true)
+    (lib.cmakeBool "LICHII_USE_QT_MULTIMEDIA" true)
     # New compilers warn where upstream's CI compiler does not.
     (lib.cmakeBool "ENABLE_WERROR" false)
 
     (lib.cmakeBool "CPMUTIL_FORCE_SYSTEM" true)
     (lib.cmakeFeature "YUZU_TZDB_PATH" "${eden.nx_tzdb}")
+    (lib.cmakeFeature "LICHII_TZDB_PATH" "${eden.nx_tzdb}")
     (lib.cmakeFeature "zstd_CUSTOM_DIR" "${zstdSrc}")
     (lib.cmakeBool "zbic_FORCE_BUNDLED" true)
     (lib.cmakeFeature "zbic_CUSTOM_DIR" "${zbic}")
     (lib.cmakeBool "xxhash_FORCE_BUNDLED" true)
     (lib.cmakeFeature "xxhash_CUSTOM_DIR" "${xxhashSrc}")
+    (lib.cmakeBool "httplib_FORCE_BUNDLED" true)
+    (lib.cmakeFeature "httplib_CUSTOM_DIR" "${httplibSrc}")
     (lib.cmakeBool "reshade_FORCE_BUNDLED" true)
     (lib.cmakeFeature "reshade_CUSTOM_DIR" "${finalAttrs.reshade}")
 
