@@ -5,7 +5,7 @@
   makeDesktopItem,
   makeWrapper,
   python3,
-  stdenvNoCC,
+  stdenv,
 }:
 
 let
@@ -16,9 +16,10 @@ let
     ps.cryptography
     ps.grpcio
     ps.tkinter
+    ps.zstandard
   ]);
 in
-stdenvNoCC.mkDerivation {
+stdenv.mkDerivation {
   pname = "playdb-cnt";
   inherit (source) version;
 
@@ -43,17 +44,28 @@ stdenvNoCC.mkDerivation {
       --replace-fail "SETTINGS = HERE / 'launcher_settings.json'" \
         "SETTINGS = Path(os.environ.get('XDG_CONFIG_HOME') or Path.home() / '.config') / 'playdb-cnt' / 'launcher_settings.json'" \
       --replace-fail "        SETTINGS.write_text(" \
-        "        SETTINGS.parent.mkdir(parents=True, exist_ok=True); SETTINGS.write_text("
+        "        SETTINGS.parent.mkdir(parents=True, exist_ok=True); SETTINGS.write_text(" \
+      --replace-fail "        stat = Path(exe).stat()" \
+        "        exe = next((w for w in [Path(exe).resolve().with_name('.' + Path(exe).resolve().name + '-wrapped')] if w.is_file()), exe); stat = Path(exe).stat()"
   '';
+  # The last replacement scans the program behind a Nix wrapper for the online and data-folder strings.
 
-  dontBuild = true;
+  # ooz decodes the game's Kraken files for the Bot Match text mod; upstream ships only ooz.exe in git.
+  buildPhase = ''
+    runHook preBuild
+    $CXX -O2 -w ${lib.optionalString stdenv.hostPlatform.isx86_64 "-msse4.1"} \
+      tools/ooz/source/kraken.cpp tools/ooz/source/bitknit.cpp tools/ooz/source/lzna.cpp -o ooz
+    runHook postBuild
+  '';
 
   installPhase = ''
     runHook preInstall
 
     share=$out/share/playdb-cnt
     mkdir -p $share
-    cp -r play_duskbloods.py tools assets $share/
+    cp -r play_duskbloods.py dusk_mods.py tools assets $share/
+    install -Dm755 ooz $share/tools/ooz/ooz
+    rm -f $share/tools/ooz/ooz.exe $share/tools/online_shim/version.dll
     install -Dm644 assets/icon.png $out/share/icons/hicolor/256x256/apps/playdb-cnt.png
 
     makeWrapper ${python}/bin/python3 $out/bin/play-duskbloods \
