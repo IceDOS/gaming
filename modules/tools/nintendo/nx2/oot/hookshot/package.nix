@@ -76,7 +76,7 @@ stdenvNoCC.mkDerivation {
 
   meta = {
     description = "Native PC recompilation of Ocarina of Time for Switch 2, built from your own copy";
-    homepage = "https://github.com/NotRexed/Hookshot";
+    homepage = "https://git.notrexed.dev/Hookshot/Hookshot";
     license = lib.licenses.gpl3Plus;
     mainProgram = pname;
     platforms = [ "x86_64-linux" ];

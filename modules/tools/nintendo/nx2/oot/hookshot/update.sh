@@ -15,14 +15,15 @@ CORE="${ICEDOS_CORE:-$REPO_ROOT/.icedos-core}"
 . "$CORE/lib/update-lib.sh"
 
 PIN="$SCRIPT_DIR/source.json"
-REPO="NotRexed/Hookshot"
+REPO="Hookshot/Hookshot"
+BASE="https://git.notrexed.dev/$REPO"
 
 main() {
   banner "hookshot updater"
 
   info "Finding latest $REPO release..."
   local tag
-  tag=$(gh_latest_release "$REPO")
+  tag=$(curl -sfL "https://git.notrexed.dev/api/v1/repos/$REPO/releases/latest" | jq -r '.tag_name // ""')
   [ -n "$tag" ] || error "no release found"
   info "  Latest: $tag"
 
@@ -34,7 +35,7 @@ main() {
   fi
   info "  Current: ${current:-none}"
 
-  local url="https://github.com/$REPO/releases/download/$tag/Hookshot-$tag-x86_64.AppImage"
+  local url="$BASE/releases/download/$tag/Hookshot-$tag-x86_64.AppImage"
 
   info "  Hashing AppImage..."
   local hash
