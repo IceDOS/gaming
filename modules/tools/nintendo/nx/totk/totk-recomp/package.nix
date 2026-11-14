@@ -32,6 +32,9 @@ let
         substituteInPlace $out/installer/steps.py \
           --replace-fail 'shutil.copy2(src, tmp)' \
           'tmp.unlink(missing_ok=True); shutil.copy2(src, tmp); os.chmod(tmp, os.stat(tmp).st_mode | 0o200)'
+        substituteInPlace $out/installer/recent.py \
+          --replace-fail "return Path(base) / 'totk-recomp' / 'setup.json'" \
+          "return Path(base) / 'icedos' / 'totk-recomp' / 'setup.json'"
       '';
     }).overrideAttrs
       (_: {
@@ -52,7 +55,16 @@ let
 
   # rebuild.txt keeps the release's store path, so point it at this package before each start.
   play = writeShellScript "totk-recomp-play" ''
-    state="''${XDG_STATE_HOME:-$HOME/.local/state}/totk-recomp/setup.json"
+    state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/icedos/totk-recomp"
+    legacy_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/totk-recomp" # legacy path pre-2026-11
+    if [ ! -e "$state_dir" ] && [ -d "$legacy_dir" ]; then
+      mkdir -p "$(dirname "$state_dir")"
+      mv "$legacy_dir" "$state_dir"
+    elif [ -d "$state_dir" ] && [ -d "$legacy_dir" ]; then
+      echo "totk-recomp: legacy state dir $legacy_dir ignored" >&2
+    fi
+
+    state="$state_dir/setup.json"
     dest="''${TOTK_RECOMP_DIR:-}"
 
     if [ -z "$dest" ] && [ -f "$state" ]; then
@@ -79,6 +91,15 @@ let
 
   run = writeShellScript "totk-recomp-run" ''
     export PYTHONNOUSERSITE=1
+
+    state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/icedos/totk-recomp"
+    legacy_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/totk-recomp" # legacy path pre-2026-11
+    if [ ! -e "$state_dir" ] && [ -d "$legacy_dir" ]; then
+      mkdir -p "$(dirname "$state_dir")"
+      mv "$legacy_dir" "$state_dir"
+    elif [ -d "$state_dir" ] && [ -d "$legacy_dir" ]; then
+      echo "totk-recomp: legacy state dir $legacy_dir ignored" >&2
+    fi
 
     if [ "''${1:-}" = "--play" ]; then
       shift
