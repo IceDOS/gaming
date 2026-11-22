@@ -66,6 +66,7 @@
               apps
               ;
             gamescope = cfg;
+            pending = config.icedos.system.cache.pending;
           };
         in
         {

@@ -7,6 +7,8 @@
   gamescope,
   # This backend's apps, with gamescope overrides resolved.
   apps,
+  # config.icedos.system.cache.pending
+  pending,
 }:
 
 let
@@ -68,36 +70,40 @@ let
 
   # Always paint the Steam overlay into the stream when visible: upstream gates overlayWindow
   # painting on !ulFocusAppId, so a focused game hides the Big Picture overlay from capture.
-  gamescopePkg = gamescopeSelected.overrideAttrs (old: {
-    postPatch =
-      (old.postPatch or "")
-      + ''
-                substituteInPlace src/steamcompmgr.cpp \
-                  --replace-fail '!ulFocusAppId && pFocus->overlayWindow && pFocus->overlayWindow->opacity' 'pFocus->overlayWindow && pFocus->overlayWindow->opacity'
+  gamescopePkg =
+    if pending then
+      pkgs.gamescope
+    else
+      gamescopeSelected.overrideAttrs (old: {
+        postPatch =
+          (old.postPatch or "")
+          + ''
+                    substituteInPlace src/steamcompmgr.cpp \
+                      --replace-fail '!ulFocusAppId && pFocus->overlayWindow && pFocus->overlayWindow->opacity' 'pFocus->overlayWindow && pFocus->overlayWindow->opacity'
 
-                # paint_pipewire() focuses a synthetic window that never sets overlayWindow; copy it
-                # from the real global focus so the overlay paint conditions above can find the window.
-                substituteInPlace src/steamcompmgr.cpp \
-                  --replace-fail 'pick_primary_focus_and_override( &s_PipewireFocus, None, vecPossibleFocusWindows, false, vecAppIds, 0, gamescope::VirtualConnectorStrategies::SteamControlled );' \
-                                  'pick_primary_focus_and_override( &s_PipewireFocus, None, vecPossibleFocusWindows, false, vecAppIds, 0, gamescope::VirtualConnectorStrategies::SteamControlled );
-         			if ( focus_t *pGlobalFocus = GetCurrentFocus() )
-         			{
-        				s_PipewireFocus.overlayWindow = pGlobalFocus->overlayWindow;
-        				s_PipewireFocus.externalOverlayWindow = pGlobalFocus->externalOverlayWindow;
-         			}'
+                    # paint_pipewire() focuses a synthetic window that never sets overlayWindow; copy it
+                    # from the real global focus so the overlay paint conditions above can find the window.
+                    substituteInPlace src/steamcompmgr.cpp \
+                      --replace-fail 'pick_primary_focus_and_override( &s_PipewireFocus, None, vecPossibleFocusWindows, false, vecAppIds, 0, gamescope::VirtualConnectorStrategies::SteamControlled );' \
+                                      'pick_primary_focus_and_override( &s_PipewireFocus, None, vecPossibleFocusWindows, false, vecAppIds, 0, gamescope::VirtualConnectorStrategies::SteamControlled );
+             			if ( focus_t *pGlobalFocus = GetCurrentFocus() )
+             			{
+            				s_PipewireFocus.overlayWindow = pGlobalFocus->overlayWindow;
+            				s_PipewireFocus.externalOverlayWindow = pGlobalFocus->externalOverlayWindow;
+             			}'
 
-                # Skip the early return when the overlay is visible (overlayWindow && opacity>0) so
-                # open/close repaints; anchored on a line stable across the inputInjection patch.
-                substituteInPlace src/steamcompmgr.cpp \
-                  --replace-fail 'if ( ulFocusCommitId == s_ulLastFocusCommitId &&' \
-                                  'if ( !( pFocus->overlayWindow && pFocus->overlayWindow->opacity ) && ulFocusCommitId == s_ulLastFocusCommitId &&'
-      ''
-      + lib.optionalString mangoApp ''
-        substituteInPlace src/steamcompmgr.cpp \
-          --replace-fail 'gamescope::Rc<CVulkanTexture> pRGBTexture = s_pPipewireBuffer->texture->isYcbcr()' 'if ( global_focus_t *pMangoOverlayFocus = GetCurrentFocus() ) { if ( pMangoOverlayFocus->externalOverlayWindow && pMangoOverlayFocus->externalOverlayWindow->opacity ) paint_window( pMangoOverlayFocus, pMangoOverlayFocus->externalOverlayWindow, pMangoOverlayFocus->externalOverlayWindow, &frameInfo, nullptr, PaintWindowFlag::NoScale | PaintWindowFlag::NoFilter | ( cv_overlay_unmultiplied_alpha ? PaintWindowFlag::CoverageMode : 0 ) ); } gamescope::Rc<CVulkanTexture> pRGBTexture = s_pPipewireBuffer->texture->isYcbcr()' \
-          --replace-fail 'ulOverrideCommitId == s_ulLastOverrideCommitId &&' 'ulOverrideCommitId == s_ulLastOverrideCommitId && !( GetCurrentFocus() && GetCurrentFocus()->externalOverlayWindow && GetCurrentFocus()->externalOverlayWindow->opacity ) &&'
-      '';
-  });
+                    # Skip the early return when the overlay is visible (overlayWindow && opacity>0) so
+                    # open/close repaints; anchored on a line stable across the inputInjection patch.
+                    substituteInPlace src/steamcompmgr.cpp \
+                      --replace-fail 'if ( ulFocusCommitId == s_ulLastFocusCommitId &&' \
+                                      'if ( !( pFocus->overlayWindow && pFocus->overlayWindow->opacity ) && ulFocusCommitId == s_ulLastFocusCommitId &&'
+          ''
+          + lib.optionalString mangoApp ''
+            substituteInPlace src/steamcompmgr.cpp \
+              --replace-fail 'gamescope::Rc<CVulkanTexture> pRGBTexture = s_pPipewireBuffer->texture->isYcbcr()' 'if ( global_focus_t *pMangoOverlayFocus = GetCurrentFocus() ) { if ( pMangoOverlayFocus->externalOverlayWindow && pMangoOverlayFocus->externalOverlayWindow->opacity ) paint_window( pMangoOverlayFocus, pMangoOverlayFocus->externalOverlayWindow, pMangoOverlayFocus->externalOverlayWindow, &frameInfo, nullptr, PaintWindowFlag::NoScale | PaintWindowFlag::NoFilter | ( cv_overlay_unmultiplied_alpha ? PaintWindowFlag::CoverageMode : 0 ) ); } gamescope::Rc<CVulkanTexture> pRGBTexture = s_pPipewireBuffer->texture->isYcbcr()' \
+              --replace-fail 'ulOverrideCommitId == s_ulLastOverrideCommitId &&' 'ulOverrideCommitId == s_ulLastOverrideCommitId && !( GetCurrentFocus() && GetCurrentFocus()->externalOverlayWindow && GetCurrentFocus()->externalOverlayWindow->opacity ) &&'
+          '';
+      });
 
   # Jovian's portal, patched for stream size, wrapped onto gamescope-0 (private D-Bus).
   xdg-desktop-portal-gamescope =
