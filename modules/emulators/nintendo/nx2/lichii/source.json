@@ -1,6 +1,6 @@
 {
-  "version": "386",
-  "rev": "build-386",
-  "url": "https://github.com/zortos293/Lichii/releases/download/build-386/lichii-linux-x86_64-pgo.AppImage",
-  "hash": "sha256-C2jINT1P4nutvix0G0RpxnXrkTd28knvx00cik2yAiI="
+  "version": "410",
+  "rev": "build-410",
+  "url": "https://github.com/zortos293/Lichii/releases/download/build-410/lichii-linux-x86_64-pgo.AppImage",
+  "hash": "sha256-HQAUyFh1nccKu1XL0UCf0X0JwJFDA+YTjvHq65lJgYU="
 }
